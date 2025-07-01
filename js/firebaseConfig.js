@@ -6,13 +6,14 @@ import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase
 
 // Tu configuración de Firebase (reemplaza con tus propios datos)
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_AUTH_DOMAIN",
-  projectId: "TU_PROJECT_ID",
-  storageBucket: "TU_STORAGE_BUCKET",
-  messagingSenderId: "TU_MESSAGING_SENDER_ID",
-  appId: "TU_APP_ID"
-};
+    apiKey: "AIzaSyA69OOCQZivUPKkdIv98ZmetSxU2B2I2rY",
+    authDomain: "epers-proyect.firebaseapp.com",
+    projectId: "epers-proyect",
+    storageBucket: "epers-proyect.firebasestorage.app",
+    messagingSenderId: "1031867506643",
+    appId: "1:1031867506643:web:2759dfdd0ba111cb52d926",
+    measurementId: "G-EE1Q00HZ23"
+  };
 
 // Inicializa Firebase una sola vez
 const app = initializeApp(firebaseConfig);
@@ -21,6 +22,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Exporta lo que necesites usar en otras partes de tu aplicación
-export { db, app };
+export { db };
 // Si solo usas Firestore, solo necesitas exportar db
 // export { db };

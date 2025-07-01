@@ -3,10 +3,10 @@ import { db } from './firebaseConfig.js';
 import { collection, onSnapshot, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
 
 
-// --- Referencias a elementos del DOM ---
-const rankingGanadasUl = document.getElementById('ranking-ganadas');
-const rankingPerdidasUl = document.getElementById('ranking-perdidas');
-const rankingJugadasUl = document.getElementById('ranking-jugadas');
+const rankingGanadasUl = document.getElementById('ranking-ganadas-ul');
+const rankingPerdidasUl = document.getElementById('ranking-perdidas-ul');
+const rankingJugadasUl = document.getElementById('ranking-jugadas-ul');
+
 
 // --- Función genérica para renderizar los rankings ---
 function renderRanking(ulElement, snapshot, metricName) {
@@ -34,26 +34,26 @@ function renderRanking(ulElement, snapshot, metricName) {
 
 // --- Listener para Espíritus con más Batallas Ganadas ---
 const qGanadas = query(
-    collection(db, "espiritus"),
-    orderBy("batallasGanadas", "desc"), // Ordenar de forma descendente
+    collection(db, "estadisticas_espiritus"),
+    orderBy("ganadas", "desc"), // Ordenar de forma descendente
     limit(5) // Mostrar los 5 primeros
 );
 
 onSnapshot(qGanadas, (snapshot) => {
     console.log("Actualizando ranking de batallas ganadas...");
-    renderRanking(rankingGanadasUl, snapshot, "batallasGanadas");
+    renderRanking(rankingGanadasUl, snapshot, "ganadas");
 });
 
 // --- Listener para Espíritus con más Batallas Perdidas ---
 const qPerdidas = query(
-    collection(db, "espiritus"),
-    orderBy("batallasPerdidas", "desc"), // Ordenar de forma descendente
+    collection(db, "estadisticas_espiritus"),
+    orderBy("perdidas", "desc"), // Ordenar de forma descendente
     limit(5) // Mostrar los 5 primeros
 );
 
 onSnapshot(qPerdidas, (snapshot) => {
     console.log("Actualizando ranking de batallas perdidas...");
-    renderRanking(rankingPerdidasUl, snapshot, "batallasPerdidas");
+    renderRanking(rankingPerdidasUl, snapshot, "perdidas");
 }, (error) => {
     console.error("Error al obtener ranking de perdidas:", error);
     rankingPerdidasUl.innerHTML = '<li class="lista">Error al cargar datos.</li>';
@@ -61,14 +61,14 @@ onSnapshot(qPerdidas, (snapshot) => {
 
 // --- Listener para Espíritus con más Batallas Jugadas ---
 const qJugadas = query(
-    collection(db, "espiritus"),
-    orderBy("batallasJugadas", "desc"), // Ordenar de forma descendente
+    collection(db, "estadisticas_espiritus"),
+    orderBy("jugadas", "desc"), // Ordenar de forma descendente
     limit(5) // Mostrar los 5 primeros
 );
 
 onSnapshot(qJugadas, (snapshot) => {
     console.log("Actualizando ranking de batallas jugadas...");
-    renderRanking(rankingJugadasUl, snapshot, "batallasJugadas");
+    renderRanking(rankingJugadasUl, snapshot, "jugadas");
 }, (error) => {
     console.error("Error al obtener ranking de jugadas:", error);
     rankingJugadasUl.innerHTML = '<li class="lista">Error al cargar datos.</li>';
