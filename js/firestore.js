@@ -1,8 +1,7 @@
-// firestore.js
 import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
 import { db } from "./firebaseConfig.js";
 
-// Función que escucha cambios en tiempo real y ejecuta un callback
+//escucha cambios en tiempo real y ejecuta un callback
 export function escucharUsuarios(callback) {
   const estadisticas_espiritus_ref = collection(db, "estadisticas_espiritus");
 
@@ -11,6 +10,6 @@ export function escucharUsuarios(callback) {
     snapshot.forEach(doc => {
       espiritus.push({ id: doc.id, ...doc.data() });
     });
-    callback(espiritus); // ejecuta la función del frontend con los datos
+    callback(espiritus); 
   });
 }

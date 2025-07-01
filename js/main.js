@@ -8,7 +8,7 @@ const rankingPerdidasUl = document.getElementById('ranking-perdidas-ul');
 const rankingJugadasUl = document.getElementById('ranking-jugadas-ul');
 
 
-// --- Función genérica para renderizar los rankings ---
+// Función para renderizar los rankings 
 function renderRanking(ulElement, snapshot, metricName) {
     ulElement.innerHTML = ''; 
 
@@ -26,17 +26,18 @@ function renderRanking(ulElement, snapshot, metricName) {
         li.classList.add('lista');
         li.innerHTML = `
             Nombre: ${espiritu.nombre || 'N/A'}<br>
+            Vida: ${espiritu.vida}<br>
             Cantidad ${metricName}: ${espiritu[metricName] || 0}
         `;
         ulElement.appendChild(li);
     });
 }
 
-// --- Listener para Espíritus con más Batallas Ganadas ---
+//  Listener para Espíritus con más Batallas Ganadas 
 const qGanadas = query(
     collection(db, "estadisticas_espiritus"),
-    orderBy("ganadas", "desc"), // Ordenar de forma descendente
-    limit(5) // Mostrar los 5 primeros
+    orderBy("ganadas", "desc"), 
+    limit(5) 
 );
 
 onSnapshot(qGanadas, (snapshot) => {
@@ -44,11 +45,11 @@ onSnapshot(qGanadas, (snapshot) => {
     renderRanking(rankingGanadasUl, snapshot, "ganadas");
 });
 
-// --- Listener para Espíritus con más Batallas Perdidas ---
+//  Listener para Espíritus con más Batallas Perdidas 
 const qPerdidas = query(
     collection(db, "estadisticas_espiritus"),
-    orderBy("perdidas", "desc"), // Ordenar de forma descendente
-    limit(5) // Mostrar los 5 primeros
+    orderBy("perdidas", "desc"), 
+    limit(5) 
 );
 
 onSnapshot(qPerdidas, (snapshot) => {
@@ -59,11 +60,11 @@ onSnapshot(qPerdidas, (snapshot) => {
     rankingPerdidasUl.innerHTML = '<li class="lista">Error al cargar datos.</li>';
 });
 
-// --- Listener para Espíritus con más Batallas Jugadas ---
+//  Listener para Espíritus con más Batallas Jugadas 
 const qJugadas = query(
     collection(db, "estadisticas_espiritus"),
-    orderBy("jugadas", "desc"), // Ordenar de forma descendente
-    limit(5) // Mostrar los 5 primeros
+    orderBy("jugadas", "desc"), 
+    limit(5) 
 );
 
 onSnapshot(qJugadas, (snapshot) => {
