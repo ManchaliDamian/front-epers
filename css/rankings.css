@@ -1,0 +1,45 @@
+body {
+    background-color: #f2f2f2;
+}
+
+.ranking-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.ranking-box {
+    background: #f8f9fa;
+    border: 2px solid #007bff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    padding: 24px 32px;
+    min-width: 280px;
+    max-width: 350px;
+    flex: 1 1 300px;
+    text-align: center;
+    transition: box-shadow 0.2s;
+}
+
+.ranking-box:hover {
+    box-shadow: 0 4px 16px rgba(0,123,255,0.15);
+}
+
+.ranking-box h2 {
+    color: #007bff;
+    margin-bottom: 16px;
+    font-size: 1.5em;
+}
+
+ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ranking-list {
+    padding: 0;
+    margin: 0;
+}
