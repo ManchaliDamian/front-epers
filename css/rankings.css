@@ -1,5 +1,17 @@
 body {
-    background-color: #f2f2f2;
+    background-image: url('../img/fondoEpers.webp');
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
 }
 
 .ranking-container {
@@ -42,4 +54,16 @@ ul{
 .ranking-list {
     padding: 0;
     margin: 0;
+}
+
+li{
+    padding: 1.1em;
+}
+
+h2,ul li {
+    border-bottom: #007bff solid 2px;
+}
+
+h2{
+    padding-bottom: .6em;
 }
