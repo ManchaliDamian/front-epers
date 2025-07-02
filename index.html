@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking Epersgeist</title>
     <link rel="stylesheet" href="css/rankings.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
     <nav>
@@ -78,6 +80,37 @@
             </table>
         </div>
     </div>
+<dialog id="espiritu-dialog">
+      <div class="modal-header">Crear Espíritu</div>
+      <form id="espiritu-form" method="dialog">
+        <label
+          >Nombre<br />
+          <input type="text" name="nombre" required />
+        </label>
+        <label
+          >Tipo<br />
+          <select name="tipo" required>
+            <option value="ANGELICAL">ANGELICAL</option>
+            <option value="DEMONIACO">DEMONIACO</option>
+          </select>
+        </label>
+        <label
+          >UBICACION ID<br />
+          <input type="number" name="ubicacionId" min="1" required />
+        </label>
+        <label
+          >Ataque<br />
+          <input type="number" name="ataque" min="1" required />
+        </label>
+        <label
+          >Defensa<br />
+          <input type="number" name="defensa" min="1" required />
+        </label>
+        <menu class="modal-footer">
+          <button type="submit">Guardar</button>
+        </menu>
+      </form>
+    </dialog>
     <script type="module" src="./js/main.js"></script>
     <script type="module">
         import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
