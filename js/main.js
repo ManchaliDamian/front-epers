@@ -1,39 +1,49 @@
-
 import { db } from './firebaseConfig.js'; 
-import { collection, onSnapshot, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
+import { collection, onSnapshot, query, orderBy, limit, getDocs } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
 
+// Selecciona los TBODY de las tablas
+const rankingGanadasTbody = document.querySelector('#ranking-ganadas-table tbody');
+const rankingPerdidasTbody = document.querySelector('#ranking-perdidas-table tbody');
+const rankingJugadasTbody = document.querySelector('#ranking-jugadas-table tbody');
+// Tabla de todos los espíritus con todos sus atributos
+const rankingTodosTbody = document.querySelector('#ranking-todos-table tbody');
 
-const rankingGanadasUl = document.getElementById('ranking-ganadas-ul');
-const rankingPerdidasUl = document.getElementById('ranking-perdidas-ul');
-const rankingJugadasUl = document.getElementById('ranking-jugadas-ul');
-
-
-// Función para renderizar los rankings 
-function renderRanking(ulElement, snapshot, metricName) {
-    ulElement.innerHTML = ''; 
+// Función para renderizar los rankings en tablas
+function renderRankingTable(tbodyElement, snapshot, metricName) {
+    tbodyElement.innerHTML = '';
 
     if (snapshot.empty) {
-        const li = document.createElement('li');
-        li.textContent = `No hay datos de ${metricName} disponibles.`;
-        li.classList.add('lista'); 
-        ulElement.appendChild(li);
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 3;
+        td.textContent = `No hay datos de ${metricName} disponibles.`;
+        tr.appendChild(td);
+        tbodyElement.appendChild(tr);
         return;
     }
 
+    let pos = 1;
     snapshot.forEach(doc => {
         const espiritu = doc.data();
-        const li = document.createElement('li');
-        li.classList.add('lista');
-        li.innerHTML = `
-            Nombre: ${espiritu.nombre || 'N/A'}<br>
-            Vida: ${espiritu.vida}<br>
-            Cantidad ${metricName}: ${espiritu[metricName] || 0}
-        `;
-        ulElement.appendChild(li);
+        const tr = document.createElement('tr');
+        // Posición
+        const tdPos = document.createElement('td');
+        tdPos.textContent = pos++;
+        tr.appendChild(tdPos);
+        // Nombre
+        const tdNombre = document.createElement('td');
+        tdNombre.textContent = espiritu.nombre || 'N/A';
+        tr.appendChild(tdNombre);
+        // Métrica
+        const tdMetric = document.createElement('td');
+        tdMetric.textContent = espiritu[metricName] || 0;
+        tr.appendChild(tdMetric);
+
+        tbodyElement.appendChild(tr);
     });
 }
 
-//  Listener para Espíritus con más Batallas Ganadas 
+// Listener para Espíritus con más Batallas Ganadas 
 const qGanadas = query(
     collection(db, "estadisticas_espiritus"),
     orderBy("ganadas", "desc"), 
@@ -41,11 +51,10 @@ const qGanadas = query(
 );
 
 onSnapshot(qGanadas, (snapshot) => {
-    console.log("Actualizando ranking de batallas ganadas...");
-    renderRanking(rankingGanadasUl, snapshot, "ganadas");
+    renderRankingTable(rankingGanadasTbody, snapshot, "ganadas");
 });
 
-//  Listener para Espíritus con más Batallas Perdidas 
+// Listener para Espíritus con más Batallas Perdidas 
 const qPerdidas = query(
     collection(db, "estadisticas_espiritus"),
     orderBy("perdidas", "desc"), 
@@ -53,14 +62,12 @@ const qPerdidas = query(
 );
 
 onSnapshot(qPerdidas, (snapshot) => {
-    console.log("Actualizando ranking de batallas perdidas...");
-    renderRanking(rankingPerdidasUl, snapshot, "perdidas");
+    renderRankingTable(rankingPerdidasTbody, snapshot, "perdidas");
 }, (error) => {
-    console.error("Error al obtener ranking de perdidas:", error);
-    rankingPerdidasUl.innerHTML = '<li class="lista">Error al cargar datos.</li>';
+    rankingPerdidasTbody.innerHTML = '<tr><td colspan="3">Error al cargar datos.</td></tr>';
 });
 
-//  Listener para Espíritus con más Batallas Jugadas 
+// Listener para Espíritus con más Batallas Jugadas 
 const qJugadas = query(
     collection(db, "estadisticas_espiritus"),
     orderBy("jugadas", "desc"), 
@@ -68,11 +75,36 @@ const qJugadas = query(
 );
 
 onSnapshot(qJugadas, (snapshot) => {
-    console.log("Actualizando ranking de batallas jugadas...");
-    renderRanking(rankingJugadasUl, snapshot, "jugadas");
+    renderRankingTable(rankingJugadasTbody, snapshot, "jugadas");
 }, (error) => {
-    console.error("Error al obtener ranking de jugadas:", error);
-    rankingJugadasUl.innerHTML = '<li class="lista">Error al cargar datos.</li>';
+    rankingJugadasTbody.innerHTML = '<tr><td colspan="3">Error al cargar datos.</td></tr>';
 });
+
+async function renderAllEspiritus() {
+    rankingTodosTbody.innerHTML = '';
+    const snapshot = await getDocs(collection(db, "estadisticas_espiritus"));
+    if (snapshot.empty) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 4;
+        td.textContent = 'No hay espíritus registrados.';
+        tr.appendChild(td);
+        rankingTodosTbody.appendChild(tr);
+        return;
+    }
+    snapshot.forEach(doc => {
+        const espiritu = doc.data();
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${espiritu.nombre || 'N/A'}</td>
+            <td>${espiritu.ganadas ?? 0}</td>
+            <td>${espiritu.perdidas ?? 0}</td>
+            <td>${espiritu.jugadas ?? 0}</td>
+        `;
+        rankingTodosTbody.appendChild(tr);
+    });
+}
+
+renderAllEspiritus();
 
 console.log("Aplicación de ranking inicializada. Escuchando cambios en Firestore...");

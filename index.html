@@ -6,27 +6,94 @@
     <title>Ranking Epersgeist</title>
     <link rel="stylesheet" href="css/rankings.css">
 </head>
-    <body>
-        <div class="ranking-container">
-            <div class="ranking-box" id="ranking-ganadas">
-                <h2>Espiritus con más batallas ganadas</h2>
-                <ul class="ranking-list" id="ranking-ganadas-ul">
-                    
-                </ul>
-            </div>
-            <div class="ranking-box" id="ranking-perdidas">
-                <h2>Espíritus con más batallas perdidas</h2>
-                <ul class="ranking-list " id="ranking-perdidas-ul">
-                    
-                </ul>
-            </div>
-            <div class="ranking-box" id="ranking-jugadas">
-                <h2>Espíritus con más batallas jugadas</h2>
-                <ul class="ranking-list" id="ranking-jugadas-ul">
-                    
-                </ul>
-            </div>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <span class="navbar-title">Ranking Epersgeist</span>
+            <button id="login-btn">Iniciar sesión</button>
         </div>
-        <script type="module" src="./js/main.js"></script>
-    </body>
+    </nav>
+    <div class="ranking-container">
+        <div class="ranking-box" id="ranking-ganadas">
+            <h2>Espiritus con más batallas ganadas</h2>
+            <table class="ranking-table" id="ranking-ganadas-table">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Nombre</th>
+                        <th>Ganadas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se insertarán las filas dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+        <div class="ranking-box" id="ranking-perdidas">
+            <h2>Espíritus con más batallas perdidas</h2>
+            <table class="ranking-table" id="ranking-perdidas-table">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Nombre</th>
+                        <th>Perdidas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se insertarán las filas dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+        <div class="ranking-box" id="ranking-jugadas">
+            <h2>Espíritus con más batallas jugadas</h2>
+            <table class="ranking-table" id="ranking-jugadas-table">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Nombre</th>
+                        <th>Jugadas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se insertarán las filas dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+        <!-- Nueva tabla: Todos los espíritus con todos sus atributos -->
+        <div class="ranking-box" id="ranking-todos">
+            <h2>Todos los espíritus</h2>
+            <table class="ranking-table" id="ranking-todos-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Ganadas</th>
+                        <th>Perdidas</th>
+                        <th>Jugadas</th>
+                        <!-- Agrega más columnas aquí si hay más atributos -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se insertarán todas las filas dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="module" src="./js/main.js"></script>
+    <script type="module">
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+        import { app } from './js/firebaseConfig.js';
+
+        const loginBtn = document.getElementById('login-btn');
+        loginBtn.addEventListener('click', async () => {
+            const auth = getAuth(app);
+            const provider = new GoogleAuthProvider();
+            try {
+                await signInWithPopup(auth, provider);
+                alert('Sesión iniciada correctamente');
+            } catch (error) {
+                alert('Error al iniciar sesión: ' + error.message);
+            }
+        });
+    </script>
+</body>
 </html>
