@@ -1,5 +1,5 @@
 import { db } from './firebaseConfig.js'; 
-import { collection, onSnapshot, query, orderBy, limit, getDocs } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
+import { collection, onSnapshot, query, orderBy, limit, doc } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 import { app } from './firebaseConfig.js';
 
@@ -28,30 +28,44 @@ form.addEventListener("submit", async (e) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error("Error al guardar");
+    //if (!response.ok) throw new Error("Error al guardar");
+    if (!response.ok) {
+      // 1) Intentamos leer un JSON con { message: "..." }
+      const errBody = await response.json().catch(() => null);
+      // 2) Si existe errBody.message, lo mostramos; si no, un mensaje genérico
+      const msg = errBody?.message || `Error al guardar (status ${response.status})`;
+      alert(msg);
+      return; // salimos sin cerrar modal
+    }
+    
+    const creado = await response.json();
+    userSpirit = creado; 
+    
     dialog.close();
     form.reset();
     alert("Espíritu guardado correctamente");
-    // Asigna el espíritu creado al usuario
-    userSpirit = data;
-    mostrarDatosEspirituUsuario();
+
+    // Listener para el Espíritu que se acaba de crear
+    const statsDocRef = doc(db, "estadisticas_espiritus", String(userSpirit.id));
+    onSnapshot(statsDocRef, (snap) => {
+      if (!snap.exists()) return;
+      const d = snap.data();
+      // Actualizamos el panel con los datos más recientes
+      document.getElementById('user-spirit-name').textContent    = d.nombre;
+      document.getElementById('user-spirit-type').textContent    = d.tipo;
+      document.getElementById('user-spirit-attack').textContent  = d.ataque;
+      document.getElementById('user-spirit-defense').textContent = d.defensa;
+      document.getElementById('user-spirit-id').textContent      = snap.id;
+    });
+    
+
   } catch (err) {
-        // Asigna datos mockeados al espíritu del usuario
-    // userSpirit = {
-    //     nombre: "MockSpirit",
-    //     tipo: "ANGELICAL",
-    //     ubicacionId: 1,
-    //     ataque: 100,
-    //     defensa: 80,
-    //     id: 1
-    // };
-    //alert('FALLO LA CREACIÓN DEL ESPÍRITU, EL SHOW DEBE CONTINUAR. ASIGNANDO DATOS MOCKEADOS AL ESPÍRITU DEL USUARIO PARA QUE PUEDA AVANZAR LA DEMOSTRACION');
-    // Opcional: muestra los datos en el panel de usuario
-    // mostrarDatosEspirituUsuario();
     console.error(err);
     alert("Falló al guardar el espíritu");
   }
 });
+
+
 
 // Selecciona los TBODY de las tablas
 const rankingGanadasTbody = document.querySelector('#ranking-ganadas-table tbody');
@@ -59,7 +73,6 @@ const rankingPerdidasTbody = document.querySelector('#ranking-perdidas-table tbo
 const rankingJugadasTbody = document.querySelector('#ranking-jugadas-table tbody');
 // Tabla de todos los espíritus con todos sus atributos
 const rankingTodosTbody = document.querySelector('#ranking-todos-table tbody');
-const ubicacionesTbody = document.querySelector('#ubicaciones-todas-table tbody');
 
 // Función para renderizar los rankings en tablas
 function renderRankingTable(tbodyElement, snapshot, metricName) {
@@ -133,32 +146,38 @@ onSnapshot(qJugadas, (snapshot) => {
     rankingJugadasTbody.innerHTML = '<tr><td colspan="3">Error al cargar datos.</td></tr>';
 });
 
-async function renderAllEspiritus() {
-    rankingTodosTbody.innerHTML = '';
-    const snapshot = await getDocs(collection(db, "estadisticas_espiritus"));
-    if (snapshot.empty) {
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-        td.colSpan = 4;
-        td.textContent = 'No hay espíritus registrados.';
-        tr.appendChild(td);
-        rankingTodosTbody.appendChild(tr);
-        return;
-    }
-    snapshot.forEach(doc => {
-        const espiritu = doc.data();
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${espiritu.nombre}</td>
-            <td>${espiritu.vida}</td>
-            <td>${espiritu.tipo}</td>
-            <td>${espiritu.ataque}</td>
-            <td>${espiritu.defensa}</td>
-            <td id="attack-{espiritu.defensa}"><button class="btn-action">⚔️</button> </td>
-        `;
-        rankingTodosTbody.appendChild(tr);
-    });
+function renderAllEspiritus(snapshot) {
+  rankingTodosTbody.innerHTML = '';
+  if (snapshot.empty) {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = 6;
+    td.textContent = 'No hay espíritus registrados.';
+    tr.appendChild(td);
+    rankingTodosTbody.appendChild(tr);
+    return;
+  }
+  snapshot.forEach(doc => {
+    const e = doc.data();
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${e.nombre}</td>
+      <td>${e.vida}</td>
+      <td>${e.tipo}</td>
+      <td>${e.ataque}</td>
+      <td>${e.defensa}</td>
+      <td><button class="btn-action" data-id="${doc.id}">⚔️</button></td>
+    `;
+    rankingTodosTbody.appendChild(tr);
+  });
 }
+
+// Suscripción reactiva:
+const qAll = collection(db, "estadisticas_espiritus");
+onSnapshot(qAll, renderAllEspiritus, err => {
+  console.error("Error recibiendo todos los espíritus:", err);
+});
+
 
 const attackEspirituBtn = document.getElementById('open-espiritu-btn');
 try {
@@ -171,12 +190,11 @@ try {
     form.reset();
     alert("Espíritu guardado correctamente");
     userSpirit = data;
-    mostrarDatosEspirituUsuario();
   } catch (err) {
     console.error(err);
     alert("Falló el combate. O sea no la acción de atacar, sino el fetch al servidor. Fijte que onda eso porque puede ponerse feo. Fijate capaz esta data te sirve: " + err.message);
   }
-renderAllEspiritus();
+
 
 // Asegúrate de que este código esté presente y después de que el DOM esté cargado
 const openEspirituBtn = document.getElementById('open-espiritu-btn');
@@ -188,54 +206,3 @@ if (openEspirituBtn && espirituDialog) {
     });
 }
 
-async function renderUbicaciones() {
-    ubicacionesTbody.innerHTML = '';
-    const snapshot = await getDocs(collection(db, "ubicaciones"));
-    if (snapshot.empty) {
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-        td.colSpan = 4;
-        td.textContent = 'No hay ubicaciones registradas.';
-        tr.appendChild(td);
-        ubicacionesTbody.appendChild(tr);
-        return;
-    }
-    snapshot.forEach(doc => {
-        const ubicacion = doc.data();
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${doc.id}</td>
-            <td>${ubicacion.nombre || 'N/A'}</td>
-            <td>${ubicacion.latitud ?? ''}</td>
-            <td>${ubicacion.longitud ?? ''}</td>
-        `;
-        ubicacionesTbody.appendChild(tr);
-    });
-}
-
-// Asignar un espíritu mockeado al iniciar sesión
-const loginBtn = document.getElementById('login-btn');
-if (loginBtn) {
-    loginBtn.addEventListener('click', async () => {
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        try {
-            await signInWithPopup(auth, provider);
-        } catch (error) {
-            alert('Error al iniciar sesión: ' + error.message);
-        }
-    });
-}
-
-// Función para mostrar los datos del espíritu del usuario en el panel
-function mostrarDatosEspirituUsuario() {
-    if (!userSpirit) return;
-    document.getElementById('user-spirit-name').textContent = userSpirit.nombre;
-    document.getElementById('user-spirit-type').textContent = userSpirit.tipo;
-    document.getElementById('user-spirit-location').textContent = userSpirit.ubicacionId;
-    document.getElementById('user-spirit-attack').textContent = userSpirit.ataque;
-    document.getElementById('user-spirit-defense').textContent = userSpirit.defensa;
-    document.getElementById('user-spirit-id').textContent = userSpirit.id;
-}
-
-renderUbicaciones();
