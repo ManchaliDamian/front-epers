@@ -1,7 +1,5 @@
 import { db } from './firebaseConfig.js'; 
 import { collection, onSnapshot, query, orderBy, limit, doc } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
-import { app } from './firebaseConfig.js';
 
 // Variable global para el espíritu del usuario
 let userSpirit = null;
@@ -16,8 +14,8 @@ form.addEventListener("submit", async (e) => {
     nombre: form.nombre.value,
     tipo: form.tipo.value,
     //-----------------------
-    ubicacionId: parseInt(form.ubicacionId.value, 10), //sin esto no funciona, antes persistir una ubicación y usar su id
-    coordenada: { "latitud": 2.0, "longitud": 1.0 }, // coordenada de prueba, sin esto no funciona
+    ubicacionId: defaultUbicacionId, // antes persistir al menos una ubicación
+    coordenada: { "latitud": 2.0, "longitud": 1.0 }, // coordenada por default
     //-----------------------
     ataque: parseInt(form.ataque.value, 10),
     defensa: parseInt(form.defensa.value, 10),
@@ -206,3 +204,17 @@ if (openEspirituBtn && espirituDialog) {
     });
 }
 
+//helper
+let defaultUbicacionId = null;
+
+async function initDefaultUbicacion() {
+  const resp = await fetch("http://localhost:8080/ubicacion");
+  if (!resp.ok) throw new Error("No se pudieron cargar ubicaciones");
+  const ubicaciones = await resp.json();
+  if (ubicaciones.length === 0) {
+    throw new Error("No hay ubicaciones definidas en el sistema");
+  }
+  defaultUbicacionId = ubicaciones[0].id;  
+}
+
+await initDefaultUbicacion();
