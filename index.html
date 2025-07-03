@@ -1,32 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking Epersgeist</title>
     <link rel="stylesheet" href="css/rankings.css">
+    <link rel="icon" href="./img/icon.png" type="image/x-icon"/>
 </head>
-    <body>
-        <div class="ranking-container">
-            <div class="ranking-box" id="ranking-ganadas">
-                <h2>Espiritus con más batallas ganadas</h2>
-                <ul class="ranking-list" id="ranking-ganadas-ul">
-                    
-                </ul>
-            </div>
-            <div class="ranking-box" id="ranking-perdidas">
-                <h2>Espíritus con más batallas perdidas</h2>
-                <ul class="ranking-list " id="ranking-perdidas-ul">
-                    
-                </ul>
-            </div>
-            <div class="ranking-box" id="ranking-jugadas">
-                <h2>Espíritus con más batallas jugadas</h2>
-                <ul class="ranking-list" id="ranking-jugadas-ul">
-                    
-                </ul>
+
+<body>
+    <nav>
+        <div class="navbar-content">
+            <span class="navbar-title">Ranking Epersgeist</span>
+            <button class="btn-a" id="open-espiritu-btn">Crear Espíritu</button>
+        </div>
+    </nav>
+    <br><br><br>
+    <div class="divisor">
+        <h1> TOP ESPIRITUAL </h1>
+    </div>
+    <div class="ranking-container">
+        <div class="ranking-box" id="ranking-ganadas">
+            <h2>Batallas Ganadas</h2>
+            <table class="ranking-table" id="ranking-ganadas-table">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Nombre</th>
+                        <th>Ganadas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se insertarán las filas dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+        <div class="ranking-box" id="ranking-perdidas">
+            <h2>Batallas Perdidas</h2>
+            <table class="ranking-table" id="ranking-perdidas-table">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Nombre</th>
+                        <th>Perdidas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se insertarán las filas dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+        <div class="ranking-box" id="ranking-jugadas">
+            <h2>Batallas jugadas</h2>
+            <table class="ranking-table" id="ranking-jugadas-table">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Nombre</th>
+                        <th>Jugadas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se insertarán las filas dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="divisor">
+        <h1> PANEL PRINCIPAL </h1>
+    </div>
+    <div class="all-container">
+        <!-- Nueva tabla: Todos los espíritus con todos sus atributos -->
+        <div class="general-box" id="ranking-todos">
+            <h2>Todos los espíritus</h2>
+            <table class="ranking-table" id="ranking-todos-table">
+                <thead>
+                    <tr>
+                        <th>👤 Nombre</th>
+                        <th>❤️ Vida</th>
+                        <th>🪽 Clasificación </th>
+                        <th>⚔️ Ataque</th>
+                        <th>🛡️ Defensa</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="user-spirit-data">
+            <h2 id="card-title">Datos del Espíritu</h2>
+            <div id="user-spirit-info">
+                <p><strong>Nombre:</strong> <span id="user-spirit-name"></span></p>
+                <p><strong>Tipo:</strong> <span id="user-spirit-type"></span></p>
+                <p><strong>Ataque:</strong> <span id="user-spirit-attack"></span></p>
+                <p><strong>Defensa:</strong> <span id="user-spirit-defense"></span></p>
+                <p><strong>ID:</strong> <span id="user-spirit-id"></span></p>
             </div>
         </div>
-        <script type="module" src="./js/main.js"></script>
-    </body>
+    </div>
+    <dialog id="espiritu-dialog">
+        <div class="modal-header">Crear Espíritu</div>
+        <form id="espiritu-form" method="dialog">
+            <label>Nombre<br />
+                <input type="text" name="nombre" required />
+            </label>
+            <label>Tipo<br />
+                <select name="tipo" required>
+                    <option value="ANGELICAL">ANGELICAL</option>
+                    <option value="DEMONIACO">DEMONIACO</option>
+                </select>
+            </label>
+            <label>UBICACION ID<br />
+                <input type="number" name="ubicacionId" min="1" required />
+            </label>
+            <label>Ataque<br />
+                <input type="number" name="ataque" min="1" required />
+            </label>
+            <label>Defensa<br />
+                <input type="number" name="defensa" min="1" required />
+            </label>
+            <menu class="modal-footer">
+                <button type="submit">Guardar</button>
+            </menu>
+        </form>
+    </dialog>
+    <script type="module" src="./js/main.js"></script>
+    <script type="module">
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+        import { app } from './js/firebaseConfig.js';
+
+        const loginBtn = document.getElementById('login-btn');
+        loginBtn.addEventListener('click', async () => {
+            const auth = getAuth(app);
+            const provider = new GoogleAuthProvider();
+            try {
+                await signInWithPopup(auth, provider);
+                alert('Sesión iniciada correctamente');
+            } catch (error) {
+                alert('Error al iniciar sesión: ' + error.message);
+            }
+        });
+
+        // Abrir el modal de creación de espíritu solo cuando se hace click en el botón
+        const openEspirituBtn = document.getElementById('open-espiritu-btn');
+        const espirituDialog = document.getElementById('espiritu-dialog');
+        openEspirituBtn.addEventListener('click', () => {
+            espirituDialog.showModal();
+        });
+    </script>
+</body>
+
 </html>
