@@ -91,13 +91,12 @@
             </table>
         </div>
         <div class="user-spirit-data">
-            <h2 id="card-title">Datos del Espíritu</h2>
+            <h2 id="card-title">Espíritu Actual</h2>
             <div id="user-spirit-info">
                 <p><strong>Nombre:</strong> <span id="user-spirit-name"></span></p>
                 <p><strong>Tipo:</strong> <span id="user-spirit-type"></span></p>
                 <p><strong>Ataque:</strong> <span id="user-spirit-attack"></span></p>
                 <p><strong>Defensa:</strong> <span id="user-spirit-defense"></span></p>
-                <p><strong>ID:</strong> <span id="user-spirit-id"></span></p>
             </div>
         </div>
     </div>
@@ -128,29 +127,6 @@
         </form>
     </dialog>
     <script type="module" src="./js/main.js"></script>
-    <script type="module">
-        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
-        import { app } from './js/firebaseConfig.js';
-
-        const loginBtn = document.getElementById('login-btn');
-        loginBtn.addEventListener('click', async () => {
-            const auth = getAuth(app);
-            const provider = new GoogleAuthProvider();
-            try {
-                await signInWithPopup(auth, provider);
-                alert('Sesión iniciada correctamente');
-            } catch (error) {
-                alert('Error al iniciar sesión: ' + error.message);
-            }
-        });
-
-        // Abrir el modal de creación de espíritu solo cuando se hace click en el botón
-        const openEspirituBtn = document.getElementById('open-espiritu-btn');
-        const espirituDialog = document.getElementById('espiritu-dialog');
-        openEspirituBtn.addEventListener('click', () => {
-            espirituDialog.showModal();
-        });
-    </script>
 </body>
 
 </html>
