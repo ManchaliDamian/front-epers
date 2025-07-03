@@ -4,7 +4,7 @@ import { collection, onSnapshot, query, orderBy, limit, getDocs } from 'https://
 
 const dialog = document.getElementById("espiritu-dialog");
 const form = document.getElementById("espiritu-form");
-dialog.showModal();
+// dialog.showModal(); // Elimina o comenta esta línea
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -41,6 +41,7 @@ const rankingPerdidasTbody = document.querySelector('#ranking-perdidas-table tbo
 const rankingJugadasTbody = document.querySelector('#ranking-jugadas-table tbody');
 // Tabla de todos los espíritus con todos sus atributos
 const rankingTodosTbody = document.querySelector('#ranking-todos-table tbody');
+const ubicacionesTbody = document.querySelector('#ubicaciones-todas-table tbody');
 
 // Función para renderizar los rankings en tablas
 function renderRankingTable(tbodyElement, snapshot, metricName) {
@@ -64,7 +65,7 @@ function renderRankingTable(tbodyElement, snapshot, metricName) {
         const tdPos = document.createElement('td');
         tdPos.textContent = pos++;
         tr.appendChild(tdPos);
-        // Nombre
+        // Nombrex
         const tdNombre = document.createElement('td');
         tdNombre.textContent = espiritu.nombre || 'N/A';
         tr.appendChild(tdNombre);
@@ -134,6 +135,7 @@ async function renderAllEspiritus() {
             <td>${espiritu.ganadas ?? 0}</td>
             <td>${espiritu.perdidas ?? 0}</td>
             <td>${espiritu.jugadas ?? 0}</td>
+            <td><button class="btn-action">⚔️</button> </td>
         `;
         rankingTodosTbody.appendChild(tr);
     });
@@ -141,4 +143,39 @@ async function renderAllEspiritus() {
 
 renderAllEspiritus();
 
-console.log("Aplicación de ranking inicializada. Escuchando cambios en Firestore...");
+// Asegúrate de que este código esté presente y después de que el DOM esté cargado
+const openEspirituBtn = document.getElementById('open-espiritu-btn');
+const espirituDialog = document.getElementById('espiritu-dialog');
+
+if (openEspirituBtn && espirituDialog) {
+    openEspirituBtn.addEventListener('click', () => {
+        espirituDialog.showModal();
+    });
+}
+
+async function renderUbicaciones() {
+    ubicacionesTbody.innerHTML = '';
+    const snapshot = await getDocs(collection(db, "ubicaciones"));
+    if (snapshot.empty) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 4;
+        td.textContent = 'No hay ubicaciones registradas.';
+        tr.appendChild(td);
+        ubicacionesTbody.appendChild(tr);
+        return;
+    }
+    snapshot.forEach(doc => {
+        const ubicacion = doc.data();
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${doc.id}</td>
+            <td>${ubicacion.nombre || 'N/A'}</td>
+            <td>${ubicacion.latitud ?? ''}</td>
+            <td>${ubicacion.longitud ?? ''}</td>
+        `;
+        ubicacionesTbody.appendChild(tr);
+    });
+}
+
+renderUbicaciones();

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,16 +9,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
+
 <body>
     <nav>
         <div class="navbar-content">
             <span class="navbar-title">Ranking Epersgeist</span>
-            <button id="login-btn">Iniciar sesión</button>
+            <button class="btn-a">Iniciar sesión</button>
+            <button class="btn-a" id="open-espiritu-btn">Crear Espíritu</button>
         </div>
     </nav>
+    <br><br><br>
+    <div class="divisor">
+        <h1> TOP ESPIRITUAL </h1>
+    </div>
     <div class="ranking-container">
         <div class="ranking-box" id="ranking-ganadas">
-            <h2>Espiritus con más batallas ganadas</h2>
+            <h2>Batallas Ganadas</h2>
             <table class="ranking-table" id="ranking-ganadas-table">
                 <thead>
                     <tr>
@@ -32,7 +39,7 @@
             </table>
         </div>
         <div class="ranking-box" id="ranking-perdidas">
-            <h2>Espíritus con más batallas perdidas</h2>
+            <h2>Batallas Perdidas</h2>
             <table class="ranking-table" id="ranking-perdidas-table">
                 <thead>
                     <tr>
@@ -47,7 +54,7 @@
             </table>
         </div>
         <div class="ranking-box" id="ranking-jugadas">
-            <h2>Espíritus con más batallas jugadas</h2>
+            <h2>Batallas jugadas</h2>
             <table class="ranking-table" id="ranking-jugadas-table">
                 <thead>
                     <tr>
@@ -61,8 +68,14 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <div class="divisor">
+        <h1> PANEL PRINCIPAL </h1>
+    </div>
+    <div class="all-container">
         <!-- Nueva tabla: Todos los espíritus con todos sus atributos -->
-        <div class="ranking-box" id="ranking-todos">
+        <div class="general-box" id="ranking-todos">
             <h2>Todos los espíritus</h2>
             <table class="ranking-table" id="ranking-todos-table">
                 <thead>
@@ -71,6 +84,7 @@
                         <th>Ganadas</th>
                         <th>Perdidas</th>
                         <th>Jugadas</th>
+                        <th></th>
                         <!-- Agrega más columnas aquí si hay más atributos -->
                     </tr>
                 </thead>
@@ -80,36 +94,31 @@
             </table>
         </div>
     </div>
-<dialog id="espiritu-dialog">
-      <div class="modal-header">Crear Espíritu</div>
-      <form id="espiritu-form" method="dialog">
-        <label
-          >Nombre<br />
-          <input type="text" name="nombre" required />
-        </label>
-        <label
-          >Tipo<br />
-          <select name="tipo" required>
-            <option value="ANGELICAL">ANGELICAL</option>
-            <option value="DEMONIACO">DEMONIACO</option>
-          </select>
-        </label>
-        <label
-          >UBICACION ID<br />
-          <input type="number" name="ubicacionId" min="1" required />
-        </label>
-        <label
-          >Ataque<br />
-          <input type="number" name="ataque" min="1" required />
-        </label>
-        <label
-          >Defensa<br />
-          <input type="number" name="defensa" min="1" required />
-        </label>
-        <menu class="modal-footer">
-          <button type="submit">Guardar</button>
-        </menu>
-      </form>
+    <dialog id="espiritu-dialog">
+        <div class="modal-header">Crear Espíritu</div>
+        <form id="espiritu-form" method="dialog">
+            <label>Nombre<br />
+                <input type="text" name="nombre" required />
+            </label>
+            <label>Tipo<br />
+                <select name="tipo" required>
+                    <option value="ANGELICAL">ANGELICAL</option>
+                    <option value="DEMONIACO">DEMONIACO</option>
+                </select>
+            </label>
+            <label>UBICACION ID<br />
+                <input type="number" name="ubicacionId" min="1" required />
+            </label>
+            <label>Ataque<br />
+                <input type="number" name="ataque" min="1" required />
+            </label>
+            <label>Defensa<br />
+                <input type="number" name="defensa" min="1" required />
+            </label>
+            <menu class="modal-footer">
+                <button type="submit">Guardar</button>
+            </menu>
+        </form>
     </dialog>
     <script type="module" src="./js/main.js"></script>
     <script type="module">
@@ -127,6 +136,14 @@
                 alert('Error al iniciar sesión: ' + error.message);
             }
         });
+
+        // Abrir el modal de creación de espíritu solo cuando se hace click en el botón
+        const openEspirituBtn = document.getElementById('open-espiritu-btn');
+        const espirituDialog = document.getElementById('espiritu-dialog');
+        openEspirituBtn.addEventListener('click', () => {
+            espirituDialog.showModal();
+        });
     </script>
 </body>
+
 </html>

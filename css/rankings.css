@@ -2,9 +2,8 @@ body {
     background-image: url('../img/fondoEpers.webp');
     margin: 0;
     padding: 0;
-    height: 100vh;
     background-size: cover;
-    background-repeat: no-repeat;
+    background-repeat: repeat;
     background-position: center;
     font-family: Arial, sans-serif;
     display: flex;
@@ -16,15 +15,26 @@ body {
 
 .ranking-container {
     display: flex;
-    flex-wrap: wrap;
     gap: 24px;
     justify-content: center;
     margin-top: 40px;
 }
 
 .ranking-box {
-    background: #f8f9fa;
-    border: 2px solid #007bff;
+    background: #f8f9fa74;
+    border: 2px solid #53667a65;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    padding: 24px 32px;
+    min-width: 280px;
+    max-width: 350px;
+    flex: 1 1 300px;
+    text-align: center;
+    transition: box-shadow 0.2s;
+}
+.general-box {
+    background: #dadde094;
+    border: 2px solid #ff000057;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.07);
     padding: 24px 32px;
@@ -40,7 +50,7 @@ body {
 }
 
 .ranking-box h2 {
-    color: #007bff;
+    color: #7b2727;
     margin-bottom: 16px;
     font-size: 1.5em;
 }
@@ -61,7 +71,7 @@ li{
 }
 
 h2,ul li {
-    border-bottom: #007bff solid 2px;
+    border-bottom: #4a4c4dde solid 2px;
 }
 
 h2{
@@ -74,7 +84,7 @@ nav {
     top: 0;
     left: 0;
     z-index: 1000;
-    background-color: #38587aab;
+    background-color: #1a2a3b;
     color: white;
     padding: 10px 20px;
     display: flex;
@@ -83,7 +93,7 @@ nav {
     box-sizing: border-box;
 }
 
-#login-btn {
+.btn-a {
     background-color: #007bff;
     color: white;
     border: none;
@@ -98,7 +108,28 @@ nav {
     font-weight: bold;
     color: rgb(216, 224, 224);
 }
-
+.btn-action {
+    background: linear-gradient(135deg, #ed9c6d 0%, #cef202 100%);
+    color: #fff;
+    border: none;
+    outline: none;
+    height: 1.7rem;
+    width: 1.7rem;
+    padding: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(33,147,176,0.15);
+    transition: background 0.3s, box-shadow 0.2s, transform 0.1s;
+    font-size: 1.2rem;
+}
+.btn-action:hover {
+    background: linear-gradient(135deg, #b02121 0%, #eddc6d 100%);
+    box-shadow: 0 4px 16px rgba(33,147,176,0.25);
+    transform: scale(1.08);
+}
 dialog {
   border: none;
   border-radius: 8px;
@@ -125,4 +156,22 @@ form select {
 .modal-footer button {
   padding: 6px 12px;
   margin-left: 5px;
+}
+.all-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.divisor {
+    width: 100%;
+    margin-top: 1rem;
+    background-color: #5254545e;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    color: #020202d3;
 }
