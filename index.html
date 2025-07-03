@@ -14,6 +14,7 @@
         <div class="navbar-content">
             <span class="navbar-title">Ranking Epersgeist</span>
             <button class="btn-a" id="open-espiritu-btn">Crear Espíritu</button>
+            <button class="btn-a" id="random-espiritu-btn">Generar Espíritu Aleatorio</button>
         </div>
     </nav>
     <br><br><br>
@@ -94,10 +95,10 @@
             <h2 id="card-title">Datos del Espíritu</h2>
             <div id="user-spirit-info">
                 <p><strong>Nombre:</strong> <span id="user-spirit-name"></span></p>
-                <p><strong>Tipo:</strong> <span id="user-spirit-type"></span></p>
+                <p><strong>Vida:</strong> <span id="user-spirit-vida"></span></p>
                 <p><strong>Ataque:</strong> <span id="user-spirit-attack"></span></p>
                 <p><strong>Defensa:</strong> <span id="user-spirit-defense"></span></p>
-                <p><strong>ID:</strong> <span id="user-spirit-id"></span></p>
+                <p><strong>Tipo:</strong> <span id="user-spirit-type"></span></p>
             </div>
         </div>
     </div>
@@ -113,8 +114,8 @@
                     <option value="DEMONIACO">DEMONIACO</option>
                 </select>
             </label>
-            <label>UBICACION ID<br />
-                <input type="number" name="ubicacionId" min="1" required />
+            <label style="display: none;">UBICACION ID<br />
+                <input type="number" value="1" name="ubicacionId" min="1" required />
             </label>
             <label>Ataque<br />
                 <input type="number" name="ataque" min="1" required />
@@ -149,6 +150,42 @@
         const espirituDialog = document.getElementById('espiritu-dialog');
         openEspirituBtn.addEventListener('click', () => {
             espirituDialog.showModal();
+        });
+
+        // Lógica para el botón aleatorio
+        document.getElementById('random-espiritu-btn').addEventListener('click', async () => {
+            // Generar valores aleatorios
+            const nombres = ["Ariel", "Belial", "Uriel", "Lilith", "Gabriel", "Azazel"];
+            const tipos = ["ANGELICAL", "DEMONIACO"];
+            const nombre = nombres[Math.floor(Math.random() * nombres.length)];
+            const tipo = tipos[Math.floor(Math.random() * tipos.length)];
+            const ataque = Math.floor(Math.random() * 100) + 1;
+            const defensa = Math.floor(Math.random() * 100) + 1;
+            const data = {
+                nombre,
+                tipo,
+                ubicacionId: 1,
+                coordenada: { latitud: -34.603733, longitud: -58.382033 },
+                ataque,
+                defensa
+            };
+            try {
+                const response = await fetch("http://localhost:8080/espiritu", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                });
+                if (!response.ok) {
+                    const errBody = await response.json().catch(() => null);
+                    const msg = errBody?.message || `Error al guardar (status ${response.status})`;
+                    alert(msg);
+                    return;
+                }
+                const creado = await response.json();
+                alert("Espíritu aleatorio creado correctamente: " + creado.nombre);
+            } catch (err) {
+                alert("Falló al crear el espíritu aleatorio: " + err.message);
+            }
         });
     </script>
 </body>
