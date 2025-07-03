@@ -149,16 +149,33 @@ async function renderAllEspiritus() {
         const espiritu = doc.data();
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${espiritu.nombre || 'N/A'}</td>
-            <td>${espiritu.ganadas ?? 0}</td>
-            <td>${espiritu.perdidas ?? 0}</td>
-            <td>${espiritu.jugadas ?? 0}</td>
-            <td><button class="btn-action">⚔️</button> </td>
+            <td>${espiritu.nombre}</td>
+            <td>${espiritu.vida}</td>
+            <td>${espiritu.tipo}</td>
+            <td>${espiritu.ataque}</td>
+            <td>${espiritu.defensa}</td>
+            <td id="attack-{espiritu.defensa}"><button class="btn-action">⚔️</button> </td>
         `;
         rankingTodosTbody.appendChild(tr);
     });
 }
 
+const attackEspirituBtn = document.getElementById('open-espiritu-btn');
+try {
+    const response = await fetch("http://localhost:8080/espiritu/"+userSpirit.id+"/combatir/"idAAtacar, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!response.ok) throw new Error("Error al guardar");
+    dialog.close();
+    form.reset();
+    alert("Espíritu guardado correctamente");
+    userSpirit = data;
+    mostrarDatosEspirituUsuario();
+  } catch (err) {
+    console.error(err);
+    alert("Falló el combate. O sea no la acción de atacar, sino el fetch al servidor. Fijte que onda eso porque puede ponerse feo. Fijate capaz esta data te sirve: " + err.message);
+  }
 renderAllEspiritus();
 
 // Asegúrate de que este código esté presente y después de que el DOM esté cargado
