@@ -17,7 +17,7 @@ form.addEventListener("submit", async (e) => {
     tipo: form.tipo.value,
     //-----------------------
     ubicacionId: parseInt(form.ubicacionId.value, 10), //sin esto no funciona, antes persistir una ubicación y usar su id
-    coordenada: { latitud: -34.9, longitud: -57.9 }, // coordenada de prueba, sin esto no funciona
+    coordenada: { "latitud": 2.0, "longitud": 1.0 }, // coordenada de prueba, sin esto no funciona
     //-----------------------
     ataque: parseInt(form.ataque.value, 10),
     defensa: parseInt(form.defensa.value, 10),
@@ -37,17 +37,17 @@ form.addEventListener("submit", async (e) => {
     mostrarDatosEspirituUsuario();
   } catch (err) {
         // Asigna datos mockeados al espíritu del usuario
-    userSpirit = {
-        nombre: "MockSpirit",
-        tipo: "ANGELICAL",
-        ubicacionId: 1,
-        ataque: 100,
-        defensa: 80,
-        id: 1
-    };
-    alert('FALLO LA CREACIÓN DEL ESPÍRITU, EL SHOW DEBE CONTINUAR. ASIGNANDO DATOS MOCKEADOS AL ESPÍRITU DEL USUARIO PARA QUE PUEDA AVANZAR LA DEMOSTRACION');
+    // userSpirit = {
+    //     nombre: "MockSpirit",
+    //     tipo: "ANGELICAL",
+    //     ubicacionId: 1,
+    //     ataque: 100,
+    //     defensa: 80,
+    //     id: 1
+    // };
+    //alert('FALLO LA CREACIÓN DEL ESPÍRITU, EL SHOW DEBE CONTINUAR. ASIGNANDO DATOS MOCKEADOS AL ESPÍRITU DEL USUARIO PARA QUE PUEDA AVANZAR LA DEMOSTRACION');
     // Opcional: muestra los datos en el panel de usuario
-    mostrarDatosEspirituUsuario();
+    // mostrarDatosEspirituUsuario();
     console.error(err);
     alert("Falló al guardar el espíritu");
   }
@@ -162,7 +162,7 @@ async function renderAllEspiritus() {
 
 const attackEspirituBtn = document.getElementById('open-espiritu-btn');
 try {
-    const response = await fetch("http://localhost:8080/espiritu/"+userSpirit.id+"/combatir/"idAAtacar, {
+    const response = await fetch("http://localhost:8080/espiritu/"+userSpirit.id+"/combatir/"+idAAtacar, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     });
