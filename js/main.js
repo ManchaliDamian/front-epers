@@ -1,5 +1,5 @@
 import { db } from './firebaseConfig.js'; 
-import { collection, onSnapshot, query, orderBy, limit, getDocs } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
+import { collection, onSnapshot, query, orderBy, limit, doc } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 import { app } from './firebaseConfig.js';
 
@@ -37,31 +37,35 @@ form.addEventListener("submit", async (e) => {
       alert(msg);
       return; // salimos sin cerrar modal
     }
+    
     const creado = await response.json();
-
+    userSpirit = creado; 
+    
     dialog.close();
     form.reset();
     alert("Espíritu guardado correctamente");
-    // Asigna el espíritu creado al usuario
-    userSpirit = creado;
-    mostrarDatosEspirituUsuario();
+
+    // Listener para el Espíritu que se acaba de crear
+    const statsDocRef = doc(db, "estadisticas_espiritus", String(userSpirit.id));
+    onSnapshot(statsDocRef, (snap) => {
+      if (!snap.exists()) return;
+      const d = snap.data();
+      // Actualizamos el panel con los datos más recientes
+      document.getElementById('user-spirit-name').textContent    = d.nombre;
+      document.getElementById('user-spirit-type').textContent    = d.tipo;
+      document.getElementById('user-spirit-attack').textContent  = d.ataque;
+      document.getElementById('user-spirit-defense').textContent = d.defensa;
+      document.getElementById('user-spirit-id').textContent      = snap.id;
+    });
+    
+
   } catch (err) {
-        // Asigna datos mockeados al espíritu del usuario
-    // userSpirit = {
-    //     nombre: "MockSpirit",
-    //     tipo: "ANGELICAL",
-    //     ubicacionId: 1,
-    //     ataque: 100,
-    //     defensa: 80,
-    //     id: 1
-    // };
-    //alert('FALLO LA CREACIÓN DEL ESPÍRITU, EL SHOW DEBE CONTINUAR. ASIGNANDO DATOS MOCKEADOS AL ESPÍRITU DEL USUARIO PARA QUE PUEDA AVANZAR LA DEMOSTRACION');
-    // Opcional: muestra los datos en el panel de usuario
-    // mostrarDatosEspirituUsuario();
     console.error(err);
     alert("Falló al guardar el espíritu");
   }
 });
+
+
 
 // Selecciona los TBODY de las tablas
 const rankingGanadasTbody = document.querySelector('#ranking-ganadas-table tbody');
@@ -186,7 +190,6 @@ try {
     form.reset();
     alert("Espíritu guardado correctamente");
     userSpirit = data;
-    mostrarDatosEspirituUsuario();
   } catch (err) {
     console.error(err);
     alert("Falló el combate. O sea no la acción de atacar, sino el fetch al servidor. Fijte que onda eso porque puede ponerse feo. Fijate capaz esta data te sirve: " + err.message);
@@ -203,13 +206,3 @@ if (openEspirituBtn && espirituDialog) {
     });
 }
 
-
-// Función para mostrar los datos del espíritu del usuario en el panel
-function mostrarDatosEspirituUsuario() {
-    if (!userSpirit) return;
-    document.getElementById('user-spirit-name').textContent = userSpirit.nombre;
-    document.getElementById('user-spirit-type').textContent = userSpirit.tipo;
-    document.getElementById('user-spirit-attack').textContent = userSpirit.ataque;
-    document.getElementById('user-spirit-defense').textContent = userSpirit.defensa;
-    document.getElementById('user-spirit-id').textContent = userSpirit.id;
-}
