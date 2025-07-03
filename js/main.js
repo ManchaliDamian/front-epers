@@ -1,6 +1,10 @@
 import { db } from './firebaseConfig.js'; 
 import { collection, onSnapshot, query, orderBy, limit, getDocs } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+import { app } from './firebaseConfig.js';
 
+// Variable global para el espíritu del usuario
+let userSpirit = null;
 
 const dialog = document.getElementById("espiritu-dialog");
 const form = document.getElementById("espiritu-form");
@@ -28,12 +32,26 @@ form.addEventListener("submit", async (e) => {
     dialog.close();
     form.reset();
     alert("Espíritu guardado correctamente");
+    // Asigna el espíritu creado al usuario
+    userSpirit = data;
+    mostrarDatosEspirituUsuario();
   } catch (err) {
+        // Asigna datos mockeados al espíritu del usuario
+    userSpirit = {
+        nombre: "MockSpirit",
+        tipo: "ANGELICAL",
+        ubicacionId: 1,
+        ataque: 100,
+        defensa: 80,
+        id: 1
+    };
+    alert('FALLO LA CREACIÓN DEL ESPÍRITU, EL SHOW DEBE CONTINUAR. ASIGNANDO DATOS MOCKEADOS AL ESPÍRITU DEL USUARIO PARA QUE PUEDA AVANZAR LA DEMOSTRACION');
+    // Opcional: muestra los datos en el panel de usuario
+    mostrarDatosEspirituUsuario();
     console.error(err);
     alert("Falló al guardar el espíritu");
   }
 });
-
 
 // Selecciona los TBODY de las tablas
 const rankingGanadasTbody = document.querySelector('#ranking-ganadas-table tbody');
@@ -176,6 +194,31 @@ async function renderUbicaciones() {
         `;
         ubicacionesTbody.appendChild(tr);
     });
+}
+
+// Asignar un espíritu mockeado al iniciar sesión
+const loginBtn = document.getElementById('login-btn');
+if (loginBtn) {
+    loginBtn.addEventListener('click', async () => {
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+        try {
+            await signInWithPopup(auth, provider);
+        } catch (error) {
+            alert('Error al iniciar sesión: ' + error.message);
+        }
+    });
+}
+
+// Función para mostrar los datos del espíritu del usuario en el panel
+function mostrarDatosEspirituUsuario() {
+    if (!userSpirit) return;
+    document.getElementById('user-spirit-name').textContent = userSpirit.nombre;
+    document.getElementById('user-spirit-type').textContent = userSpirit.tipo;
+    document.getElementById('user-spirit-location').textContent = userSpirit.ubicacionId;
+    document.getElementById('user-spirit-attack').textContent = userSpirit.ataque;
+    document.getElementById('user-spirit-defense').textContent = userSpirit.defensa;
+    document.getElementById('user-spirit-id').textContent = userSpirit.id;
 }
 
 renderUbicaciones();

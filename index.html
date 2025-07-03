@@ -6,15 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking Epersgeist</title>
     <link rel="stylesheet" href="css/rankings.css">
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./img/icon.png" type="image/x-icon"/>
 </head>
 
 <body>
     <nav>
         <div class="navbar-content">
             <span class="navbar-title">Ranking Epersgeist</span>
-            <button class="btn-a">Iniciar sesión</button>
+            <button class="btn-a" id="login-btn">Iniciar sesión</button>
             <button class="btn-a" id="open-espiritu-btn">Crear Espíritu</button>
         </div>
     </nav>
@@ -85,13 +84,22 @@
                         <th>Perdidas</th>
                         <th>Jugadas</th>
                         <th></th>
-                        <!-- Agrega más columnas aquí si hay más atributos -->
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Aquí se insertarán todas las filas dinámicamente -->
                 </tbody>
             </table>
+        </div>
+        <div class="user-spirit-data">
+            <h2 id="card-title">Datos del Espíritu</h2>
+            <div id="user-spirit-info">
+                <p><strong>Nombre:</strong> <span id="user-spirit-name"></span></p>
+                <p><strong>Tipo:</strong> <span id="user-spirit-type"></span></p>
+                <p><strong>Ubicación (ID):</strong> <span id="user-spirit-location"></span></p>
+                <p><strong>Ataque:</strong> <span id="user-spirit-attack"></span></p>
+                <p><strong>Defensa:</strong> <span id="user-spirit-defense"></span></p>
+                <p><strong>ID:</strong> <span id="user-spirit-id"></span></p>
+            </div>
         </div>
     </div>
     <dialog id="espiritu-dialog">
