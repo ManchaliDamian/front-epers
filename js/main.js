@@ -42,8 +42,8 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const data = {
     nombre: form.nombre.value,
-    tipo: form.tipo.value,
     ubicacionId: defaultUbicacionId,
+    tipo: form.tipo.value,
     coordenada: { latitud: 1.0, longitud: 0.0 }, //default
     ataque: parseInt(form.ataque.value, 10),
     defensa: parseInt(form.defensa.value, 10),
@@ -232,20 +232,15 @@ function mostrarDatosEspiritu(espiritu) {
   if (typeof updateSpiritImage === "function") {
     updateSpiritImage(espiritu.tipo);
   }
-  // Mostrar espadas según el ataque (0-100 => 0-10 espadas)
+
   const ataque = Math.max(0, Number(espiritu.ataque) || 0);
-  const espadas = Math.round(ataque / 10);
-  const espadasHtml = "⚔️".repeat(espadas);
-  document.getElementById("user-spirit-attack").textContent = espadasHtml;
+  document.getElementById("user-spirit-attack").textContent = ataque;
+
   const defensa = Math.max(0, Number(espiritu.defensa) || 0);
-  const escudos = Math.round(defensa / 10);
-  const escudosHtml = "🛡️".repeat(escudos);
-  document.getElementById("user-spirit-defense").textContent = escudosHtml;
-  // Mostrar corazones según la vida (0-100 => 0-10 corazones)
+  document.getElementById("user-spirit-defense").textContent = defensa;
+
   const vida = Math.max(0, Number(espiritu.vida) || 0);
-  const corazones = Math.round(vida / 10);
-  const corazonesHtml = "❤️".repeat(corazones) + "🤍".repeat(10 - corazones);
-  document.getElementById("user-spirit-vida").innerHTML = corazonesHtml;
+  document.getElementById("user-spirit-vida").innerHTML = vida;
 }
 
 // --- En el botón aleatorio ---
@@ -291,7 +286,7 @@ rankingTodosTbody.addEventListener("click", async (e) => {
     const idEspirituACombatir = e.target.getAttribute("data-id");
     // id del espíritu del usuario
     if (!userSpirit || !userSpirit.id) {
-      alert("Primero debes crear o seleccionar tu espíritu.");
+      alert("Primero debes crear tu espíritu.");
       return;
     }
     const idEspiritu = userSpirit.id;
@@ -327,7 +322,7 @@ function nombreUnico() {
 }
 
 const rangoMin = 1;
-const rangoMax = 50;
+const rangoMax = 40;
 function numeroAleatorioEntre(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
