@@ -189,6 +189,7 @@ function renderAllEspiritus(snapshot) {
     const e = doc.data();
     // Para no mostrar el espíritu del usuario en la tabla de espiritus
     if (e.nombre === userSpirit?.nombre) return;
+    if(e.vida === 0) return; // No mostrar espíritus con vida <= 0
     const tr = document.createElement("tr");
     // Asigna una clase según el tipo de espíritu
     if (e.tipo === "ANGELICAL") {
@@ -234,18 +235,13 @@ function mostrarDatosEspiritu(espiritu) {
   }
   // Mostrar espadas según el ataque (0-100 => 0-10 espadas)
   const ataque = Math.max(0, Number(espiritu.ataque) || 0);
-  const espadas = Math.round(ataque / 10);
-  const espadasHtml = "⚔️".repeat(espadas);
-  document.getElementById("user-spirit-attack").textContent = espadasHtml;
+  document.getElementById("user-spirit-attack").textContent = ataque;
+
   const defensa = Math.max(0, Number(espiritu.defensa) || 0);
-  const escudos = Math.round(defensa / 10);
-  const escudosHtml = "🛡️".repeat(escudos);
-  document.getElementById("user-spirit-defense").textContent = escudosHtml;
-  // Mostrar corazones según la vida (0-100 => 0-10 corazones)
+  document.getElementById("user-spirit-defense").textContent = defensa;
+
   const vida = Math.max(0, Number(espiritu.vida) || 0);
-  const corazones = Math.round(vida / 10);
-  const corazonesHtml = "❤️".repeat(corazones) + "🤍".repeat(10 - corazones);
-  document.getElementById("user-spirit-vida").innerHTML = corazonesHtml;
+  document.getElementById("user-spirit-vida").innerHTML = vida;
 }
 
 // --- En el botón aleatorio ---
@@ -309,8 +305,11 @@ rankingTodosTbody.addEventListener("click", async (e) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-    const resultado = await response.json();
-    alert("¡Combate realizado!\n" + JSON.stringify(resultado, null, 2));
+    if (!response.ok) {
+      alert(`Error al combatir: ${response.status} ${response.statusText}`);
+      return;
+    }
+    alert("¡Combate realizado!");
   }
 });
 
