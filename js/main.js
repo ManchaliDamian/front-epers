@@ -146,13 +146,29 @@ function renderAllEspiritus(snapshot) {
   snapshot.forEach(doc => {
     const e = doc.data();
     const tr = document.createElement('tr');
+    // Asigna una clase según el tipo de espíritu
+    if (e.tipo === "ANGELICAL") {
+      tr.classList.add('espiritu-angelical');
+    } else if (e.tipo === "DEMONIACO") {
+      tr.classList.add('espiritu-demonio');
+    }
+
+    // Determina el color según la vida
+    const vida = Math.max(0, Number(e.vida) || 0);
+    let color = "#0b6b2dd6"; // verde por defecto
+    if (vida <= 30) {
+        color = "#6b0b0b"; // rojo
+    } else if (vida <= 70) {
+        color = "#ad781cb2"; // naranja
+    }
+
     tr.innerHTML = `
-      <td>${e.nombre}</td>
-      <td>${e.vida}</td>
-      <td>${e.tipo}</td>
-      <td>${e.ataque}</td>
-      <td>${e.defensa}</td>
-      <td><button class="btn-action" data-id="${doc.id}">⚔️</button></td>
+      <td class='general-element-nombre'>${e.nombre}</td>
+      <td class='general-element-vida' style="color:${color}">${e.vida}</td>
+      <td class='general-element-tipo'>${e.tipo}</td>
+      <td class='general-element-ataque'>${e.ataque}</td>
+      <td class='general-element-defensa'>${e.defensa}</td>
+      <td class='general-element-action'><button class="btn-action" data-id="${doc.id}">⚔️</button></td>
     `;
     rankingTodosTbody.appendChild(tr);
   });
@@ -164,25 +180,6 @@ onSnapshot(qAll, renderAllEspiritus, err => {
   console.error("Error recibiendo todos los espíritus:", err);
 });
 
-
-//const attackEspirituBtn = document.getElementById('open-espiritu-btn');
-//try {
-//    const response = await fetch("http://localhost:8080/espiritu/"+userSpirit.id+"/combatir/"+idAAtacar, {
-//      method: "POST",
-//      headers: { "Content-Type": "application/json" },
-//    });
-//    if (!response.ok) throw new Error("Error al guardar");
-//    dialog.close();
-//    form.reset();
-//    alert("Espíritu guardado correctamente");
-//    userSpirit = data;
-//  } catch (err) {
-//    console.error(err);
-//    alert("Falló el combate. O sea no la acción de atacar, sino el fetch al servidor. Fijte que onda eso porque puede ponerse feo. Capaz esta data te sirve: " + err.message);
-//  }
-//
-//
-// Asegúrate de que este código esté presente y después de que el DOM esté cargado
 const openEspirituBtn = document.getElementById('open-espiritu-btn');
 const espirituDialog = document.getElementById('espiritu-dialog');
 
@@ -195,9 +192,24 @@ if (openEspirituBtn && espirituDialog) {
 function mostrarDatosEspiritu(espiritu) {
     document.getElementById('user-spirit-name').textContent = espiritu.nombre || '';
     document.getElementById('user-spirit-type').textContent = espiritu.tipo || '';
-    document.getElementById('user-spirit-attack').textContent = espiritu.ataque ?? '';
-    document.getElementById('user-spirit-defense').textContent = espiritu.defensa ?? '';
-    document.getElementById('user-spirit-vida').textContent = espiritu.vida || '';
+    // Actualiza la imagen según el tipo
+    if (typeof updateSpiritImage === "function") {
+        updateSpiritImage(espiritu.tipo);
+    }
+    // Mostrar espadas según el ataque (0-100 => 0-10 espadas)
+    const ataque = Math.max(0, Number(espiritu.ataque) || 0);
+    const espadas = Math.round(ataque / 10);
+    const espadasHtml = '⚔️'.repeat(espadas);
+    document.getElementById('user-spirit-attack').textContent = espadasHtml;
+    const defensa = Math.max(0, Number(espiritu.defensa) || 0);
+    const escudos = Math.round(defensa / 10);
+    const escudosHtml = '🛡️'.repeat(escudos);
+    document.getElementById('user-spirit-defense').textContent = escudosHtml;
+    // Mostrar corazones según la vida (0-100 => 0-10 corazones)
+    const vida = Math.max(0, Number(espiritu.vida) || 0);
+    const corazones = Math.round(vida / 10);
+    const corazonesHtml = '❤️'.repeat(corazones) + '🤍'.repeat(10 - corazones);
+    document.getElementById('user-spirit-vida').innerHTML = corazonesHtml;
 }
 
 let userSpiritUnsubscribe = null;
@@ -250,10 +262,6 @@ if (randomEspirituBtn) {
                 return;
             }
             const creado = await response.json();
-            // Asignar el id al userSpirit y suscribirse a los cambios en tiempo real
-            userSpirit = { ...creado, id: creado.id };
-            mostrarDatosEspiritu(userSpirit);
-            suscribirDatosEspiritu(userSpirit.id);
             alert("Espíritu aleatorio creado correctamente: " + creado.nombre);
         } catch (err) {
             alert("Falló al crear el espíritu aleatorio: " + err.message);
@@ -278,7 +286,8 @@ rankingTodosTbody.addEventListener('click', async (e) => {
         }
         console.log(`Combatiendo con espíritu ID: ${idEspiritu} contra ID: ${idEspirituACombatir}`);
         const response = await fetch(`http://localhost:8080/espiritu/${idEspiritu}/combatir/${idEspirituACombatir}`, {
-            method: "PUT"
+            method: "PUT",
+            headers: { "Content-Type": "application/json" }
         });
         const resultado = await response.json();
         alert("¡Combate realizado!\n" + JSON.stringify(resultado, null, 2));

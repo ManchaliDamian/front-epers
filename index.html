@@ -19,7 +19,7 @@
     </nav>
     <br><br><br>
     <div class="divisor">
-        <h1> TOP ESPIRITUAL </h1>
+        <h1 id="top"> Ranking </h1>
     </div>
     <div class="ranking-container">
         <div class="ranking-box" id="ranking-ganadas">
@@ -70,7 +70,7 @@
     </div>
 
     <div class="divisor">
-        <h1> PANEL PRINCIPAL </h1>
+        <h1 id="top"> PANEL PRINCIPAL </h1>
     </div>
     <div class="all-container">
         <!-- Nueva tabla: Todos los espíritus con todos sus atributos -->
@@ -95,34 +95,41 @@
             <h2 id="card-title">Datos del Espíritu</h2>
             <div id="user-spirit-info">
                 <p><strong>Nombre:</strong> <span id="user-spirit-name"></span></p>
-                <p><strong>Vida:</strong> <span id="user-spirit-vida"></span></p>
-                <p><strong>Ataque:</strong> <span id="user-spirit-attack"></span></p>
-                <p><strong>Defensa:</strong> <span id="user-spirit-defense"></span></p>
+                <img class="img-ilu" id="user-spirit-img" src="/img/default.png" alt="">
+                <script>
+                    // Cambia la imagen según el tipo de espíritu
+                    function updateSpiritImage(tipo) {
+                        const img = document.getElementById('user-spirit-img');
+                        if (tipo === 'ANGELICAL') {
+                            img.src = '/img/angel.png';
+                        } else if (tipo === 'DEMONIACO') {
+                            img.src = '/img/demonio.png';
+                        } else {
+                            img.src = '/img/default.png';
+                        }
+                    }
+                    // Ejemplo de uso: updateSpiritImage('ANGELICAL');
+                    // Llama a esta función cuando actualices el tipo de espíritu
+                </script>
                 <p><strong>Tipo:</strong> <span id="user-spirit-type"></span></p>
+                <p><strong>Vida:</strong><br> <span id="user-spirit-vida"></span></p>
+                <p><strong>Ataque:</strong><br> <span id="user-spirit-attack"></span></p>
+                <p><strong>Defensa:</strong><br> <span id="user-spirit-defense"></span></p>
             </div>
         </div>
     </div>
     <dialog id="espiritu-dialog">
-        <div class="modal-header">Crear Espíritu</div>
-        <form id="espiritu-form" method="dialog">
-            <label>Nombre<br />
-                <input type="text" name="nombre" required />
-            </label>
-            <label>Tipo<br />
-                <select name="tipo" required>
+        <form class="form" id="espiritu-form" method="dialog">
+            <div class="modal-header">CREAR ESPIRITU</div>
+            <input placeholder="Nombre" class="input" type="text" name="nombre" required />
+            <label style="color: aliceblue;">Tipo <br>
+                <select name="tipo" class="input" required>
                     <option value="ANGELICAL">ANGELICAL</option>
                     <option value="DEMONIACO">DEMONIACO</option>
                 </select>
             </label>
-            <label style="display: none;">UBICACION ID<br />
-                <input type="number" value="1" name="ubicacionId" min="1" required />
-            </label>
-            <label>Ataque<br />
-                <input type="number" name="ataque" min="1" required />
-            </label>
-            <label>Defensa<br />
-                <input type="number" name="defensa" min="1" required />
-            </label>
+                <input placeholder="Ataque" class="input" type="number" name="ataque" min="1" required />
+                <input placeholder="Defensa" class="input" type="number" name="defensa" min="1" required />
             <menu class="modal-footer">
                 <button type="submit">Guardar</button>
             </menu>
