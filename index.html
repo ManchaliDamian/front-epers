@@ -1,59 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking Epersgeist</title>
-    <link rel="stylesheet" href="css/rankings.css" />
-  </head>
-  <body>
+    <link rel="stylesheet" href="css/rankings.css">
+    <link rel="icon" href="./img/icon.png" type="image/x-icon"/>
+</head>
+
+<body>
+    <nav>
+        <div class="navbar-content">
+            <span class="navbar-title">Ranking Epersgeist</span>
+            <button class="btn-a" id="random-espiritu-btn">Generar Espíritu Aleatorio</button>
+        </div>
+    </nav>
+    <br><br><br>
+    <div class="divisor">
+        <h1 id="top"> Ranking </h1>
+    </div>
     <div class="ranking-container">
-      <div class="ranking-box" id="ranking-ganadas">
-        <h2>Espiritus con más batallas ganadas</h2>
-        <ul class="ranking-list" id="ranking-ganadas-ul"></ul>
-      </div>
-      <div class="ranking-box" id="ranking-perdidas">
-        <h2>Espíritus con más batallas perdidas</h2>
-        <ul class="ranking-list" id="ranking-perdidas-ul"></ul>
-      </div>
-      <div class="ranking-box" id="ranking-jugadas">
-        <h2>Espíritus con más batallas jugadas</h2>
-        <ul class="ranking-list" id="ranking-jugadas-ul"></ul>
-      </div>
+        <div class="ranking-box" id="ranking-ganadas">
+            <h2>Batallas Ganadas</h2>
+            <table class="ranking-table" id="ranking-ganadas-table">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Nombre</th>
+                        <th>Ganadas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se insertarán las filas dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+        <div class="ranking-box" id="ranking-perdidas">
+            <h2>Batallas Perdidas</h2>
+            <table class="ranking-table" id="ranking-perdidas-table">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Nombre</th>
+                        <th>Perdidas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se insertarán las filas dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+        <div class="ranking-box" id="ranking-jugadas">
+            <h2>Batallas jugadas</h2>
+            <table class="ranking-table" id="ranking-jugadas-table">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Nombre</th>
+                        <th>Jugadas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se insertarán las filas dinámicamente -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
+    <div class="divisor">
+        <h1 id="top"> PANEL PRINCIPAL </h1>
+    </div>
+    <div class="all-container">
+        <!-- Nueva tabla: Todos los espíritus con todos sus atributos -->
+        <div class="general-box" id="ranking-todos">
+            <h2>Todos los espíritus</h2>
+            <table class="ranking-table" id="ranking-todos-table">
+                <thead>
+                    <tr>
+                        <th>👤 Nombre</th>
+                        <th>❤️ Vida</th>
+                        <th>🪽 Clasificación </th>
+                        <th>⚔️ Ataque</th>
+                        <th>🛡️ Defensa</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="user-spirit-data">
+            <h2 id="card-title">Datos del Espíritu</h2>
+            <div id="user-spirit-info">
+                <p><strong>Nombre:</strong> <span id="user-spirit-name"></span></p>
+                <img class="img-ilu" id="user-spirit-img" src="/img/default.png" alt="">
+                <script>
+                    // Cambia la imagen según el tipo de espíritu
+                    function updateSpiritImage(tipo) {
+                        const img = document.getElementById('user-spirit-img');
+                        if (tipo === 'ANGELICAL') {
+                            img.src = '/img/angel.png';
+                        } else if (tipo === 'DEMONIACO') {
+                            img.src = '/img/demonio.png';
+                        } else {
+                            img.src = '/img/default.png';
+                        }
+                    }
+                    // Ejemplo de uso: updateSpiritImage('ANGELICAL');
+                    // Llama a esta función cuando actualices el tipo de espíritu
+                </script>
+                <p><strong>Tipo:</strong> <span id="user-spirit-type"></span></p>
+                <p><strong>Vida:</strong><br> <span id="user-spirit-vida"></span></p>
+                <p><strong>Ataque:</strong><br> <span id="user-spirit-attack"></span></p>
+                <p><strong>Defensa:</strong><br> <span id="user-spirit-defense"></span></p>
+            </div>
+        </div>
+    </div>
     <dialog id="espiritu-dialog">
-      <div class="modal-header">Crear Espíritu</div>
-      <form id="espiritu-form" method="dialog">
-        <label
-          >Nombre<br />
-          <input type="text" name="nombre" required />
-        </label>
-        <label
-          >Tipo<br />
-          <select name="tipo" required>
-            <option value="ANGELICAL">ANGELICAL</option>
-            <option value="DEMONIACO">DEMONIACO</option>
-          </select>
-        </label>
-        <label
-          >UBICACION ID<br />
-          <input type="number" name="ubicacionId" min="1" required />
-        </label>
-        <label
-          >Ataque<br />
-          <input type="number" name="ataque" min="1" required />
-        </label>
-        <label
-          >Defensa<br />
-          <input type="number" name="defensa" min="1" required />
-        </label>
-        <menu class="modal-footer">
-          <button type="submit">Guardar</button>
-        </menu>
-      </form>
+        <form class="form" id="espiritu-form" method="dialog">
+            <div class="modal-header">CREAR ESPIRITU</div>
+            <input placeholder="Nombre" class="input" type="text" name="nombre" maxlength="15" required />
+            <label style="color: aliceblue;">Tipo <br>
+                <select name="tipo" class="input" required>
+                    <option value="ANGELICAL">ANGELICAL</option>
+                    <option value="DEMONIACO">DEMONIACO</option>
+                </select>
+            </label>
+                <input placeholder="Ataque" class="input" type="number" name="ataque" min="1" max="50" required />
+                <input placeholder="Defensa" class="input" type="number" name="defensa" min="1" max="50" required />
+            <menu class="modal-footer">
+                <button type="submit">Guardar</button>
+            </menu>
+        </form>
     </dialog>
-
     <script type="module" src="./js/main.js"></script>
-  </body>
+</body>
 </html>
