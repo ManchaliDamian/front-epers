@@ -105,12 +105,13 @@ nav {
 }
 
 .btn-a {
-    background-color: #007bff;
-    color: white;
+    background-color: #3b536c;
+    color: rgb(226, 220, 220);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+    margin-left: 12px;
     transition: background-color 0.3s ease;
 }
 #title {
