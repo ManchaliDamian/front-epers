@@ -1,21 +1,20 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js';
-import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js'; // Para Firestore
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
 // Configuración de Firebase Firestore.
 const firebaseConfig = {
-    apiKey: "AIzaSyA69OOCQZivUPKkdIv98ZmetSxU2B2I2rY",
-    authDomain: "epers-proyect.firebaseapp.com",
-    projectId: "epers-proyect",
-    storageBucket: "epers-proyect.firebasestorage.app",
-    messagingSenderId: "1031867506643",
-    appId: "1:1031867506643:web:2759dfdd0ba111cb52d926",
-    measurementId: "G-EE1Q00HZ23"
-  };
-
+  apiKey: "AIzaSyDlrZ-ChyT0kWgnPFw0YIpp98jXrLIovYk",
+  authDomain: "epers-ejemplo.firebaseapp.com",
+  projectId: "epers-ejemplo",
+  storageBucket: "epers-ejemplo.firebasestorage.app",
+  messagingSenderId: "990135446957",
+  appId: "1:990135446957:web:3db72349a21a21577d4524",
+  measurementId: "G-CMZPTMWD1X"
+};
 
 const app = initializeApp(firebaseConfig);
 
 // Se obtiene la instancia de Firestore
 const db = getFirestore(app);
 
-export { db };
+export { app, db };
