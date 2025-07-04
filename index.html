@@ -13,7 +13,6 @@
     <nav>
         <div class="navbar-content">
             <span class="navbar-title">Ranking Epersgeist</span>
-            <button class="btn-a" id="open-espiritu-btn">Crear Espíritu</button>
             <button class="btn-a" id="random-espiritu-btn">Generar Espíritu Aleatorio</button>
         </div>
     </nav>
@@ -121,80 +120,20 @@
     <dialog id="espiritu-dialog">
         <form class="form" id="espiritu-form" method="dialog">
             <div class="modal-header">CREAR ESPIRITU</div>
-            <input placeholder="Nombre" class="input" type="text" name="nombre" required />
+            <input placeholder="Nombre" class="input" type="text" name="nombre" maxlength="15" required />
             <label style="color: aliceblue;">Tipo <br>
                 <select name="tipo" class="input" required>
                     <option value="ANGELICAL">ANGELICAL</option>
                     <option value="DEMONIACO">DEMONIACO</option>
                 </select>
             </label>
-                <input placeholder="Ataque" class="input" type="number" name="ataque" min="1" required />
-                <input placeholder="Defensa" class="input" type="number" name="defensa" min="1" required />
+                <input placeholder="Ataque" class="input" type="number" name="ataque" min="1" max="50" required />
+                <input placeholder="Defensa" class="input" type="number" name="defensa" min="1" max="50" required />
             <menu class="modal-footer">
                 <button type="submit">Guardar</button>
             </menu>
         </form>
     </dialog>
     <script type="module" src="./js/main.js"></script>
-    <script type="module">
-        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
-        import { app } from './js/firebaseConfig.js';
-
-        const loginBtn = document.getElementById('login-btn');
-        loginBtn.addEventListener('click', async () => {
-            const auth = getAuth(app);
-            const provider = new GoogleAuthProvider();
-            try {
-                await signInWithPopup(auth, provider);
-                alert('Sesión iniciada correctamente');
-            } catch (error) {
-                alert('Error al iniciar sesión: ' + error.message);
-            }
-        });
-
-        // Abrir el modal de creación de espíritu solo cuando se hace click en el botón
-        const openEspirituBtn = document.getElementById('open-espiritu-btn');
-        const espirituDialog = document.getElementById('espiritu-dialog');
-        openEspirituBtn.addEventListener('click', () => {
-            espirituDialog.showModal();
-        });
-
-        // Lógica para el botón aleatorio
-        document.getElementById('random-espiritu-btn').addEventListener('click', async () => {
-            // Generar valores aleatorios
-            const nombres = ["Ariel", "Belial", "Uriel", "Lilith", "Gabriel", "Azazel"];
-            const tipos = ["ANGELICAL", "DEMONIACO"];
-            const nombre = nombres[Math.floor(Math.random() * nombres.length)];
-            const tipo = tipos[Math.floor(Math.random() * tipos.length)];
-            const ataque = Math.floor(Math.random() * 100) + 1;
-            const defensa = Math.floor(Math.random() * 100) + 1;
-            const data = {
-                nombre,
-                tipo,
-                ubicacionId: 1,
-                coordenada: { latitud: -34.603733, longitud: -58.382033 },
-                ataque,
-                defensa
-            };
-            try {
-                const response = await fetch("http://localhost:8080/espiritu", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data),
-                });
-                if (!response.ok) {
-                    const errBody = await response.json().catch(() => null);
-                    const msg = errBody?.message || `Error al guardar (status ${response.status})`;
-                    alert(msg);
-                    return;
-                }
-                const creado = await response.json();
-                alert("Espíritu aleatorio creado correctamente: " + creado.nombre);
-            } catch (err) {
-                alert("Falló al crear el espíritu aleatorio: " + err.message);
-            }
-        });
-    </script>
 </body>
-
 </html>

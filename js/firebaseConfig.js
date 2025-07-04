@@ -3,14 +3,13 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.4.0/firebase
 
 // Configuración de Firebase Firestore.
 const firebaseConfig = {
-    apiKey: "AIzaSyDck0vFcBJZSCua3fyX5P0ODRlFdx4eajs",
-    authDomain: "epersproyect.firebaseapp.com",
-    databaseURL: "https://epersproyect-default-rtdb.firebaseio.com",
-    projectId: "epersproyect",
-    storageBucket: "epersproyect.appspot.com",
-    messagingSenderId: "540144396874",
-    appId: "1:540144396874:web:65a5e11ebd431db1abd4b3",
-    measurementId: "G-NKTDPXFTH6"
+    apiKey: "AIzaSyCuJ1XYZQLyIE8MgGeBeWQb0boAPQqH_iM",
+    authDomain: "epers-86648.firebaseapp.com",
+    projectId: "epers-86648",
+    storageBucket: "epers-86648.firebasestorage.app",
+    messagingSenderId: "855932523812",
+    appId: "1:855932523812:web:5e6b37133918d5af134fb1",
+    measurementId: "G-SS3DJPEVKX",
 };
 
 const app = initializeApp(firebaseConfig);
